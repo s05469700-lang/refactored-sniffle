@@ -57,8 +57,10 @@ th { background: #f2f2f2; }
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyC1s8DdFy44PI3D4U04omK-G9A8Ftq-y2ng3f6sirmvTWJ7AasLC_cIww9_ERcS5QADA/exec"; // 
+const API_URL = "https://script.google.com/macros/s/AKfycbwpmQZEf7v9AC-t5zhYtXz5wQ8H0WQq2wUBHCDkbDr9etdpeWjmUzN0HApGDbtJ0_rb4g/exec
+"; // <-- 請換成 Apps Script Web App URL
 
+// 讀取資料
 function loadData(){
     fetch(API_URL)
     .then(res => res.json())
@@ -87,16 +89,17 @@ function loadData(){
     .catch(err=>console.error("載入資料錯誤:",err));
 }
 
+// 新增資料
 function addRow(){
     try {
         const date = document.getElementById("date").value;
         const item = document.getElementById("item").value;
-        console.log("新增登記:", date, item);
+        console.log("按下新增登記:", date, item);
 
         if(!date) return alert("請選擇日期");
 
         fetch(API_URL, {
-            method: "POST",
+            method:"POST",
             body: JSON.stringify({action:"add", date:date, item:item}),
             headers: {"Content-Type":"application/json"}
         })
@@ -111,6 +114,7 @@ function addRow(){
     }
 }
 
+// 刪除資料
 function deleteRow(id){
     fetch(API_URL, {
         method:"POST",
@@ -122,10 +126,9 @@ function deleteRow(id){
     .catch(err=>console.error("刪除資料錯誤:",err));
 }
 
+// 載入頁面時抓取資料
 window.onload = loadData;
 </script>
 
 </body>
 </html>
-
-
