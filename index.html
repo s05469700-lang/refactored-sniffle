@@ -6,10 +6,10 @@
 <title>塔吊登記表</title>
 <style>
 body { font-family: Arial; padding: 10px; background: #eef1f5; }
-.container { max-width: 500px; margin: auto; background: #fff; padding: 15px; border-radius: 12px; }
+.container { max-width: 500px; margin: auto; background: #fff; padding: 15px; border-radius: 12px; overflow: visible; }
 input, select, button { width: 100%; padding: 10px; margin-top: 6px; font-size: 16px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; }
-button { background: #0069d9; color: white; border: none; margin-top: 12px; }
-button.deleteBtn { background: #dc3545; padding: 5px 10px; font-size: 14px; }
+button { background: #0069d9; color: white; border: none; margin-top: 12px; cursor: pointer; }
+button.deleteBtn { background: #dc3545; padding: 5px 10px; font-size: 14px; cursor: pointer; }
 table { width: 100%; margin-top: 15px; border-collapse: collapse; }
 th, td { border: 1px solid #ccc; padding: 6px; text-align: center; }
 th { background: #f2f2f2; }
@@ -57,7 +57,7 @@ th { background: #f2f2f2; }
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbzDm5EFVw5MpUf7yNBIU6qs3x9HiqMlwPeaL-0SmPARAHHJPa-6RNFrIe1EHGRZwXMi/exec"; // <-- 替換成 Apps Script Web App URL
+const API_URL = "https://script.google.com/macros/s/AKfycby8C3xd8BrhsS1LQu_hISsv1OCQaBMyiQmdnj7IaZuEUyuJTGd7oQkYndVgDJKTiI9YrQ/exec"; // 
 
 function loadData(){
     fetch(API_URL)
@@ -80,7 +80,6 @@ function loadData(){
             const btn = document.createElement("button");
             btn.innerText = "刪除";
             btn.className = "deleteBtn";
-            btn.type = "button";
             btn.onclick = () => deleteRow(item.id);
             btnCell.appendChild(btn);
         });
@@ -89,18 +88,27 @@ function loadData(){
 }
 
 function addRow(){
-    const date = document.getElementById("date").value;
-    const item = document.getElementById("item").value;
-    if(!date) return alert("請選擇日期");
+    try {
+        const date = document.getElementById("date").value;
+        const item = document.getElementById("item").value;
+        console.log("新增登記:", date, item);
 
-    fetch(API_URL, {
-        method:"POST",
-        body: JSON.stringify({action:"add", date:date, item:item}),
-        headers: {"Content-Type":"application/json"}
-    })
-    .then(res => res.json())
-    .then(()=> loadData())
-    .catch(err=>console.error("新增資料錯誤:",err));
+        if(!date) return alert("請選擇日期");
+
+        fetch(API_URL, {
+            method: "POST",
+            body: JSON.stringify({action:"add", date:date, item:item}),
+            headers: {"Content-Type":"application/json"}
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("新增成功:", data);
+            loadData();
+        })
+        .catch(err=>console.error("新增資料錯誤:",err));
+    } catch(e) {
+        console.error("addRow() 錯誤:", e);
+    }
 }
 
 function deleteRow(id){
