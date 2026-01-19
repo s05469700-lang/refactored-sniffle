@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>工程登記表</title>
+<title>塔吊登記表</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <style>
@@ -132,6 +132,7 @@ function addRow() {
         return;
     }
 
+    // 先把資料寫在表格上（手機即時顯示）
     const table = document.getElementById("dataTable").querySelector("tbody");
     const row = table.insertRow();
 
@@ -142,10 +143,22 @@ function addRow() {
     else if (item.startsWith('C')) bgColor = '#fff3cd';
 
     row.style.backgroundColor = bgColor;
-
     row.insertCell(0).innerText = date;
     row.insertCell(1).innerText = item;
+
+    // --- 送資料到 Google 試算表 ---
+    fetch("https://script.google.com/macros/library/d/1vpspuPKQBbagPvqGAX72YzgTAjPfcC2UJ_TBsS3Ks8yYgUdkG8_2836W/1", {
+        method: "POST",
+        body: JSON.stringify({date: date, item: item}),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(res => res.json())
+    .then(data => console.log(data))
+    .catch(err => console.error(err));
 }
+
 
 function exportExcel() {
     const table = document.getElementById("dataTable");
@@ -156,3 +169,4 @@ function exportExcel() {
 
 </body>
 </html>
+
