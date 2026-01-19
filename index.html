@@ -134,6 +134,15 @@ function addRow() {
 
     const table = document.getElementById("dataTable").querySelector("tbody");
     const row = table.insertRow();
+
+    // 判斷棟別顏色
+    let bgColor = '';
+    if (item.startsWith('A')) bgColor = '#cce5ff';
+    else if (item.startsWith('B')) bgColor = '#d4edda';
+    else if (item.startsWith('C')) bgColor = '#fff3cd';
+
+    row.style.backgroundColor = bgColor;
+
     row.insertCell(0).innerText = date;
     row.insertCell(1).innerText = item;
 }
