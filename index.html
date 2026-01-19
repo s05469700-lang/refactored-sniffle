@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>工程登記表</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #eef1f5;
+    padding: 10px;
+}
+.container {
+    background: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    max-width: 520px;
+    margin: auto;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.logo {
+    text-align: center;
+    margin-bottom: 10px;
+}
+.logo img {
+    max-width: 180px;
+    max-height: 80px;
+}
+h2 {
+    text-align: center;
+    margin: 10px 0 15px 0;
+}
+label {
+    margin-top: 10px;
+    display: block;
+    font-weight: bold;
+}
+select, input, button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+}
+button {
+    background: #0069d9;
+    color: white;
+    border: none;
+    margin-top: 12px;
+}
+button.export {
+    background: #28a745;
+}
+table {
+    width: 100%;
+    margin-top: 15px;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+    font-size: 14px;
+}
+th {
+    background: #f2f2f2;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- 公司 LOGO -->
+    <div class="logo">
+        <img src="logo.png" alt="公司Logo">
+    </div>
+
+    <h2>塔吊登記表</h2>
+
+    <label>日期</label>
+    <input type="date" id="date">
+
+    <label>工程項目</label>
+    <select id="item">
+        <option>A棟模板</option>
+        <option>A棟鋼筋</option>
+        <option>A棟鷹架</option>
+        <option>A棟水電</option>
+        <option>A棟其他</option>
+        <option>B棟模板</option>
+        <option>B棟鋼筋</option>
+        <option>B棟鷹架</option>
+        <option>B棟水電</option>
+        <option>B棟其他</option>
+        <option>C棟模板</option>
+        <option>C棟鋼筋</option>
+        <option>C棟鷹架</option>
+        <option>C棟水電</option>
+        <option>C棟其他</option>
+    </select>
+
+    <button type="button" onclick="addRow()">新增登記</button>
+    <button type="button" class="export" onclick="exportExcel()">匯出 Excel</button>
+
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>日期</th>
+                <th>項目</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+</div>
+
+<script>
+function addRow() {
+    const date = document.getElementById("date").value;
+    const item = document.getElementById("item").value;
+
+    if (!date) {
+        alert("請選擇日期");
+        return;
+    }
+
+    const table = document.getElementById("dataTable").querySelector("tbody");
+    const row = table.insertRow();
+    row.insertCell(0).innerText = date;
+    row.insertCell(1).innerText = item;
+}
+
+function exportExcel() {
+    const table = document.getElementById("dataTable");
+    const wb = XLSX.utils.table_to_book(table, {sheet:"工程登記表"});
+    XLSX.writeFile(wb, "工程登記表.xlsx");
+}
+</script>
+
+</body>
+</html>
