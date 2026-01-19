@@ -5,51 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>塔吊登記表</title>
 <style>
-body {
-    font-family: Arial, sans-serif;
-    padding: 10px;
-    background: #eef1f5;
-}
-.container {
-    max-width: 500px;
-    margin: auto;
-    background: #fff;
-    padding: 15px;
-    border-radius: 12px;
-}
-input, select, button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 6px;
-    font-size: 16px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-}
-button {
-    background: #0069d9;
-    color: white;
-    border: none;
-    margin-top: 12px;
-}
-button.deleteBtn {
-    background: #dc3545;
-    padding: 5px 10px;
-    font-size: 14px;
-}
-table {
-    width: 100%;
-    margin-top: 15px;
-    border-collapse: collapse;
-}
-th, td {
-    border: 1px solid #ccc;
-    padding: 6px;
-    text-align: center;
-}
-th {
-    background: #f2f2f2;
-}
+body { font-family: Arial; padding: 10px; background: #eef1f5; }
+.container { max-width: 500px; margin: auto; background: #fff; padding: 15px; border-radius: 12px; }
+input, select, button { width: 100%; padding: 10px; margin-top: 6px; font-size: 16px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; }
+button { background: #0069d9; color: white; border: none; margin-top: 12px; }
+button.deleteBtn { background: #dc3545; padding: 5px 10px; font-size: 14px; }
+table { width: 100%; margin-top: 15px; border-collapse: collapse; }
+th, td { border: 1px solid #ccc; padding: 6px; text-align: center; }
+th { background: #f2f2f2; }
 </style>
 </head>
 <body>
@@ -94,10 +57,9 @@ th {
 </div>
 
 <script>
-// --- 設定 Google Apps Script Web App URL ---
-const API_URL = "https://script.google.com/macros/s/AKfycbynrhl3Fyxt_qvhjZrG-PxANLrmQCG_F5b21BqmovivUVxqEg-q256VyKNCwAvk9c_KcA/exec";
+const API_URL = "你的 Web App URL"; // <-- 這裡換成你的 Apps Script Web App URL
 
-// 載入資料
+// 讀取資料
 function loadData(){
     fetch(API_URL)
     .then(res => res.json())
@@ -115,7 +77,6 @@ function loadData(){
             row.insertCell(0).innerText = item.date;
             row.insertCell(1).innerText = item.item;
 
-            // 刪除按鈕
             const btnCell = row.insertCell(2);
             const btn = document.createElement("button");
             btn.innerText = "刪除";
@@ -124,7 +85,8 @@ function loadData(){
             btn.onclick = () => deleteRow(item.id);
             btnCell.appendChild(btn);
         });
-    });
+    })
+    .catch(err=>console.error("載入資料錯誤:",err));
 }
 
 // 新增資料
@@ -139,7 +101,8 @@ function addRow(){
         headers: {"Content-Type":"application/json"}
     })
     .then(res => res.json())
-    .then(()=> loadData());
+    .then(()=> loadData())
+    .catch(err=>console.error("新增資料錯誤:",err));
 }
 
 // 刪除資料
@@ -150,7 +113,8 @@ function deleteRow(id){
         headers: {"Content-Type":"application/json"}
     })
     .then(res=>res.json())
-    .then(()=> loadData());
+    .then(()=> loadData())
+    .catch(err=>console.error("刪除資料錯誤:",err));
 }
 
 // 頁面載入時抓取資料
@@ -159,5 +123,3 @@ window.onload = loadData;
 
 </body>
 </html>
-
-
