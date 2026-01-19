@@ -57,9 +57,8 @@ th { background: #f2f2f2; }
 </div>
 
 <script>
-const API_URL = "你的 Web App URL"; // <-- 這裡換成你的 Apps Script Web App URL
+const API_URL = "https://script.google.com/macros/s/AKfycbzDm5EFVw5MpUf7yNBIU6qs3x9HiqMlwPeaL-0SmPARAHHJPa-6RNFrIe1EHGRZwXMi/exec"; // <-- 替換成 Apps Script Web App URL
 
-// 讀取資料
 function loadData(){
     fetch(API_URL)
     .then(res => res.json())
@@ -89,7 +88,6 @@ function loadData(){
     .catch(err=>console.error("載入資料錯誤:",err));
 }
 
-// 新增資料
 function addRow(){
     const date = document.getElementById("date").value;
     const item = document.getElementById("item").value;
@@ -105,7 +103,6 @@ function addRow(){
     .catch(err=>console.error("新增資料錯誤:",err));
 }
 
-// 刪除資料
 function deleteRow(id){
     fetch(API_URL, {
         method:"POST",
@@ -117,7 +114,6 @@ function deleteRow(id){
     .catch(err=>console.error("刪除資料錯誤:",err));
 }
 
-// 頁面載入時抓取資料
 window.onload = loadData;
 </script>
 
