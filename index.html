@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>塔吊登記表</title>
+<title>塔吊登記表 Debug 版</title>
 <style>
 body { font-family: Arial; padding: 10px; background: #eef1f5; }
 .container { max-width: 500px; margin: auto; background: #fff; padding: 15px; border-radius: 12px; overflow: visible; }
@@ -18,7 +18,7 @@ th { background: #f2f2f2; }
 <body>
 
 <div class="container">
-    <h2>塔吊登記表</h2>
+    <h2>塔吊登記表 Debug 版</h2>
 
     <label>日期</label>
     <input type="date" id="date">
@@ -43,13 +43,14 @@ th { background: #f2f2f2; }
     </select>
 
     <button type="button" onclick="addRow()">新增登記</button>
+    <button type="button" onclick="console.log('測試按鈕觸發')">測試按鈕 (Debug)</button>
 
     <table id="dataTable">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>日期</th>
                 <th>項目</th>
+                <th>操作</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -57,10 +58,12 @@ th { background: #f2f2f2; }
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwpmQZEf7v9AC-t5zhYtXz5wQ8H0WQq2wUBHCDkbDr9etdpeWjmUzN0HApGDbtJ0_rb4g/exec";
-const SHEET_ID = "1wXPV_CR9gAWKTMrHyB415Nd8ylZTwXbRLIT6soykgGQ";   
-    
+// ====== 配置 ======
+const API_URL = "https://script.google.com/macros/s/AKfycbwpmQZEf7v9AC-t5zhYtXz5wQ8H0WQq2wUBHCDkbDr9etdpeWjmUzN0HApGDbtJ0_rb4g/exec"; // <-- 替換成你 Apps Script Web App URL
+
+// ====== 載入資料 ======
 function loadData(){
+    console.log("載入資料...");
     fetch(API_URL)
     .then(res => res.json())
     .then(data => {
@@ -84,12 +87,15 @@ function loadData(){
             btn.onclick = () => deleteRow(item.id);
             btnCell.appendChild(btn);
         });
-    }).catch(err=>console.error(err));
+    })
+    .catch(err => console.error("載入資料錯誤:", err));
 }
 
+// ====== 新增登記 ======
 function addRow(){
     const date = document.getElementById("date").value;
     const item = document.getElementById("item").value;
+    console.log("按下新增登記:", date, item);
     if(!date) return alert("請選擇日期");
 
     fetch(API_URL, {
@@ -97,24 +103,33 @@ function addRow(){
         body: JSON.stringify({action:"add", date:date, item:item}),
         headers: {"Content-Type":"application/json"}
     })
-    .then(()=> loadData())
-    .catch(err=>console.error(err));
+    .then(res => res.json())
+    .then(data => {
+        console.log("新增回傳:", data);
+        loadData();
+    })
+    .catch(err => console.error("新增登記錯誤:", err));
 }
 
+// ====== 刪除資料 ======
 function deleteRow(id){
+    console.log("刪除資料 ID:", id);
     fetch(API_URL, {
         method:"POST",
         body: JSON.stringify({action:"delete", id:id}),
         headers: {"Content-Type":"application/json"}
-    }).then(()=> loadData());
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log("刪除回傳:", data);
+        loadData();
+    })
+    .catch(err => console.error("刪除錯誤:", err));
 }
 
+// ====== 頁面載入 ======
 window.onload = loadData;
 </script>
 
 </body>
 </html>
-
-
-
-
